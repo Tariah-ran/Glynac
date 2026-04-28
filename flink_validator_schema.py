@@ -1,23 +1,5 @@
-# ============================================================
-#  FLINK SCHEMA-BASED DATA VALIDATOR — Jupyter / IPython
-#  Checks: missing, empty, wrong types, value constraints
-# ============================================================
-#  STEP 1 — DEFINE YOUR SCHEMA
-# ============================================================
-#
-#  Each field entry supports:
-#    "type"      : expected Python type — str, int, float, bool, list, dict
-#    "required"  : True/False — flag if field is missing or null
-#    "allow_empty: True/False — flag if field is empty string / [] / {}
-#    "min"       : minimum numeric value (int/float fields)
-#    "max"       : maximum numeric value (int/float fields)
-#    "min_length": minimum string/list length
-#    "max_length": maximum string/list length
-#    "allowed"   : list of allowed values  e.g. ["active", "inactive"]
-#    "nullable"  : True = null is acceptable even if required=True
-#
-#  Nested fields use dot notation as the key: "address.city"
-# ============================================================
+
+#  FLINK SCHEMA-BASED DATA VALIDATOR
 
 SCHEMA = {
     "name": {
@@ -77,9 +59,8 @@ STRICT_MODE  = False   # True = whitespace-only strings also flagged as EMPTY
 SAVE_REPORT  = False   # True = save a JSON report file
 REPORT_PATH  = "flink_validation_report.json"
 
-# ============================================================
-#  ENGINE  (no need to edit below)
-# ============================================================
+
+#  ENGINE 
 
 import json, os
 from collections import defaultdict
@@ -113,7 +94,6 @@ def load_avro_file(path):
     return records
 
 
-# ── Flatten nested dicts ──────────────────────────────────
 
 def flatten(record: dict, parent: str = "", sep: str = ".") -> dict:
     out = {}
@@ -198,7 +178,7 @@ def validate_record(record: dict, idx: int, schema: dict, strict: bool = False) 
 
         # ── Type check ────────────────────────────────────
         if expected_type and not isinstance(value, expected_type):
-            # Allow int where float expected (common in JSON)
+       
             if not (expected_type is float and isinstance(value, int)):
                 issues.append({
                     "record_index": idx,
@@ -210,7 +190,7 @@ def validate_record(record: dict, idx: int, schema: dict, strict: bool = False) 
                         f"got {type(value).__name__} → {repr(value)}"
                     ),
                 })
-                continue  # skip constraint checks on wrong-typed value
+                continue  
 
         # ── Numeric constraints ───────────────────────────
         if isinstance(value, (int, float)):

@@ -37,13 +37,11 @@ SCHEMA = {
     },
 }
 
-# ============================================================
-#  STEP 2 — CONFIGURE INPUT
-# ============================================================
 
-INPUT_MODE  = "json_string"   # "file" | "json_string"
 
-FILE_PATH   = "data.json"     # used when INPUT_MODE = "file" (.json or .avro)
+INPUT_MODE  = "json_string"   
+
+FILE_PATH   = "data.json"     
 
 JSON_STRING = """
 [
@@ -55,8 +53,8 @@ JSON_STRING = """
 ]
 """
 
-STRICT_MODE  = False   # True = whitespace-only strings also flagged as EMPTY
-SAVE_REPORT  = False   # True = save a JSON report file
+STRICT_MODE  = False  
+SAVE_REPORT  = False   
 REPORT_PATH  = "flink_validation_report.json"
 
 
@@ -163,7 +161,7 @@ def validate_record(record: dict, idx: int, schema: dict, strict: bool = False) 
                     "issue_type": "MISSING VALUE (null/None)",
                     "detail": f"Field '{field}' is required but is null.",
                 })
-            continue  # skip further checks on null
+            continue
 
         # ── Empty check ───────────────────────────────────
         if not allow_empty and is_empty(value, strict=strict):
